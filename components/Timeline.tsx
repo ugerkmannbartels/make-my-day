@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -37,31 +37,28 @@ export default function Timeline({
   const [modalVisible, setModalVisible] = useState(false);
   const [newEventModalVisible, setNewEventModalVisible] = useState(false);
 
-  // Number of 3-week chunks into the future to show
-  const [futureChunks, setFutureChunks] = useState(1);
+  // How many future events to display
+  const [visibleFutureCount, setVisibleFutureCount] = useState(2);
 
-  // Calculate the cutoff date: today + (futureChunks * 3 weeks)
-  const cutoffDate = useMemo(() => {
-    const d = new Date();
-    d.setDate(d.getDate() + futureChunks * 21);
-    d.setHours(23, 59, 59, 999);
-    return d;
-  }, [futureChunks]);
+  const now = new Date();
 
-  // Sort events by date
+  // Sort events by date (newest first)
   const allSortedEvents = [...events].sort(
     (a, b) => b.date.getTime() - a.date.getTime()
   );
 
-  // Filter events within cutoff range
-  const sortedEvents = allSortedEvents.filter(
-    (event) => event.date.getTime() <= cutoffDate.getTime()
-  );
+  // Split into past and future events
+  const pastEvents = allSortedEvents.filter((e) => e.date.getTime() <= now.getTime());
+  const futureEvents = allSortedEvents
+    .filter((e) => e.date.getTime() > now.getTime())
+    .reverse(); // chronological order so we take the nearest N
 
-  // Check if there are more future events beyond the cutoff
-  const hasMoreFutureEvents = allSortedEvents.some(
-    (event) => event.date.getTime() > cutoffDate.getTime()
-  );
+  // Take only the first N future events, then re-sort descending for display
+  const visibleFuture = futureEvents.slice(0, visibleFutureCount).reverse();
+  const sortedEvents = [...visibleFuture, ...pastEvents];
+
+  // Check if there are more future events to show
+  const hasMoreFutureEvents = futureEvents.length > visibleFutureCount;
 
   const handleEventPress = (event: TimelineEventData) => {
     setSelectedEvent(event);
@@ -121,7 +118,7 @@ export default function Timeline({
         <TouchableOpacity
           style={styles.moreButton}
           activeOpacity={0.7}
-          onPress={() => setFutureChunks((prev) => prev + 1)}
+          onPress={() => setVisibleFutureCount((prev) => prev + 2)}
         >
           <Ionicons name="chevron-forward-outline" size={16} color="#A78BFA" />
           <Text style={styles.moreButtonText}>mehr</Text>
