@@ -26,7 +26,11 @@
 <img width="411" height="837" alt="image" src="https://github.com/user-attachments/assets/168b5757-f944-491a-8391-fc2b0be94afb" />
 
 ## Add Event
-<img width="411" height="837" alt="image" src="https://github.com/user-attachments/assets/8dee078e-91dd-4ae0-8238-c8042a292bc6" />
+<img width="411" height="837" alt="image" src="https://github.com/user-attachments/assets/1ca79c50-91e3-4202-870b-3db96546adcd
+<img width="590" height="1278" alt="image" src="https://github.com/user-attachments/assets/b2052746-709d-40d6-8c37-7dae010d2e42" />
+<img width="411" height="837" alt="image" src="https://github.com/user-attachments/assets/f34a593e-b145-415f-a379-6aa49afc730a" />
+
+
 
 
 
