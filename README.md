@@ -18,3 +18,15 @@
 - Widget auf iOS
 - Teilen-Funktion aus jeder App (Bild,Text,URL,...)
 
+## Home-Screen
+
+<img width="411" height="837" alt="image" src="https://github.com/user-attachments/assets/980f88da-e912-4318-b75b-54bc52a1a3f3" />
+
+## Timeline
+<img width="411" height="837" alt="image" src="https://github.com/user-attachments/assets/168b5757-f944-491a-8391-fc2b0be94afb" />
+
+## Add Event
+<img width="411" height="837" alt="image" src="https://github.com/user-attachments/assets/8dee078e-91dd-4ae0-8238-c8042a292bc6" />
+
+
+
