@@ -8,7 +8,7 @@
 
 - Nutze eine App um Events, Veranstaltungen für die Zukunft zu sammeln als Highlights.
 - Das Event-Sammeln erfolgt einfach mit einem Foto aus der App.
-- Die KI extriert automatisch Title und Datum.
+- Die KI extraiert automatisch Title, Datum und mehr.
 - Der Benutzer oder die KI bewertet den Event mit einer Sterne Bewertung.
 - Je mehr Highlights man sammelt je positiv ausgeglichener ist dein Karma-Index
 
