@@ -6,6 +6,7 @@ export interface TimelineEventData {
   category: EventCategory;
   icon: string;
   rating: number;
+  imageUri?: string;
 }
 
 export type EventCategory = 'work' | 'personal' | 'travel' | 'milestone' | 'health' | 'social';

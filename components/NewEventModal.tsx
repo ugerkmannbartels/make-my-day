@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal,
   View,
@@ -10,8 +10,10 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
+  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 import {
   TimelineEventData,
   EventCategory,
@@ -55,6 +57,15 @@ export default function NewEventModal({
   const [category, setCategory] = useState<EventCategory>('personal');
   const [dateText, setDateText] = useState('');
   const [rating, setRating] = useState(3);
+  const [showCameraPopup, setShowCameraPopup] = useState(true);
+  const [imageUri, setImageUri] = useState<string | null>(null);
+
+  // Show camera popup each time the modal opens
+  useEffect(() => {
+    if (visible) {
+      setShowCameraPopup(true);
+    }
+  }, [visible]);
 
   const resetForm = () => {
     setTitle('');
@@ -62,6 +73,28 @@ export default function NewEventModal({
     setCategory('personal');
     setDateText('');
     setRating(3);
+    setShowCameraPopup(true);
+    setImageUri(null);
+  };
+
+  const handleTakePhoto = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Kamera-Zugriff wird benötigt, um ein Foto aufzunehmen.');
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ['images'],
+      quality: 0.8,
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    if (!result.canceled && result.assets.length > 0) {
+      setImageUri(result.assets[0].uri);
+      setShowCameraPopup(false);
+    }
   };
 
   const handleSave = () => {
@@ -86,6 +119,7 @@ export default function NewEventModal({
       category,
       icon: categoryIcons[category],
       rating,
+      ...(imageUri ? { imageUri } : {}),
     };
 
     onSave(newEvent);
@@ -132,6 +166,23 @@ export default function NewEventModal({
                   showsVerticalScrollIndicator={false}
                   style={styles.formScroll}
                 >
+                  {/* Image Preview */}
+                  {imageUri && (
+                    <View style={styles.imagePreviewContainer}>
+                      <Image
+                        source={{ uri: imageUri }}
+                        style={styles.imagePreview}
+                      />
+                      <TouchableOpacity
+                        style={styles.removeImageButton}
+                        onPress={() => setImageUri(null)}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons name="close-circle" size={24} color="#FF6584" />
+                      </TouchableOpacity>
+                    </View>
+                  )}
+
                   {/* Title */}
                   <Text style={styles.label}>Titel</Text>
                   <TextInput
@@ -260,6 +311,35 @@ export default function NewEventModal({
                 </View>
               </View>
             </TouchableOpacity>
+
+            {/* Camera Popup Overlay */}
+            {showCameraPopup && (
+              <View style={styles.cameraPopupOverlay}>
+                <View style={styles.cameraPopupCard}>
+                  {/* Close X button */}
+                  <TouchableOpacity
+                    style={styles.cameraPopupClose}
+                    onPress={() => setShowCameraPopup(false)}
+                    activeOpacity={0.7}
+                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                  >
+                    <Ionicons name="close" size={22} color="rgba(255,255,255,0.7)" />
+                  </TouchableOpacity>
+
+                  {/* Camera icon */}
+                  <TouchableOpacity
+                    style={styles.cameraIconButton}
+                    onPress={handleTakePhoto}
+                    activeOpacity={0.7}
+                  >
+                    <View style={styles.cameraIconCircle}>
+                      <Ionicons name="camera" size={48} color="#FFF" />
+                    </View>
+                    <Text style={styles.cameraLabel}>Foto aufnehmen</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
           </View>
         </TouchableOpacity>
       </KeyboardAvoidingView>
@@ -400,6 +480,79 @@ const styles = StyleSheet.create({
   cancelButtonText: {
     color: '#FFFFFF',
     fontSize: 15,
+    fontWeight: '600',
+  },
+  // Image preview in form
+  imagePreviewContainer: {
+    marginTop: 8,
+    marginBottom: 4,
+    borderRadius: 14,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  imagePreview: {
+    width: '100%',
+    height: 160,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+  },
+  removeImageButton: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    borderRadius: 12,
+    padding: 2,
+  },
+  // Camera popup overlay
+  cameraPopupOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  cameraPopupCard: {
+    backgroundColor: 'rgba(30, 30, 50, 0.97)',
+    borderRadius: 24,
+    paddingVertical: 40,
+    paddingHorizontal: 48,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.6,
+    shadowRadius: 30,
+    elevation: 30,
+  },
+  cameraPopupClose: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cameraIconButton: {
+    alignItems: 'center',
+  },
+  cameraIconCircle: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    backgroundColor: 'rgba(108, 99, 255, 0.25)',
+    borderWidth: 2,
+    borderColor: 'rgba(108, 99, 255, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 14,
+  },
+  cameraLabel: {
+    color: 'rgba(255,255,255,0.6)',
+    fontSize: 14,
     fontWeight: '600',
   },
 });
