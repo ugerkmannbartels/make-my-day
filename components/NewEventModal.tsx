@@ -216,6 +216,29 @@ export default function NewEventModal({
                     keyboardType="numeric"
                   />
 
+                  {/* Rating */}
+                  <Text style={styles.label}>Bewertung</Text>
+                  <View style={styles.starsRow}>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <TouchableOpacity
+                        key={star}
+                        onPress={() => setRating(star)}
+                        activeOpacity={0.6}
+                        hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
+                      >
+                        <Ionicons
+                          name={star <= rating ? 'star' : 'star-outline'}
+                          size={28}
+                          color={
+                            star <= rating
+                              ? '#F9D423'
+                              : 'rgba(255,255,255,0.2)'
+                          }
+                        />
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+
                   {/* Category */}
                   <Text style={styles.label}>Kategorie</Text>
                   <View style={styles.chipRow}>
@@ -260,29 +283,6 @@ export default function NewEventModal({
                         </TouchableOpacity>
                       );
                     })}
-                  </View>
-
-                  {/* Rating */}
-                  <Text style={styles.label}>Bewertung</Text>
-                  <View style={styles.starsRow}>
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <TouchableOpacity
-                        key={star}
-                        onPress={() => setRating(star)}
-                        activeOpacity={0.6}
-                        hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
-                      >
-                        <Ionicons
-                          name={star <= rating ? 'star' : 'star-outline'}
-                          size={28}
-                          color={
-                            star <= rating
-                              ? '#F9D423'
-                              : 'rgba(255,255,255,0.2)'
-                          }
-                        />
-                      </TouchableOpacity>
-                    ))}
                   </View>
                 </ScrollView>
 
