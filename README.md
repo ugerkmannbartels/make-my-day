@@ -2,7 +2,7 @@
 
 ## Das Idee
 
-- Sammle viele Highlights für deine Nahe Zukunft auf die Du Dich freuen kannst.
+- Sammle viele Highlights für deine nahe Zukunft, auf die du dich freuen kannst.
 
 ## MVP
 
